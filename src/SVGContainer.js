@@ -38,9 +38,11 @@ class SVGContainer extends Component {
   render() {
     return (
       <div
-        style={{
-          margin: "30px"
-        }}
+        style={
+          {
+            // margin: "30px"
+          }
+        }
       >
         <GradientTool
           width={500}

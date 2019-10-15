@@ -114,13 +114,13 @@ class GradientTool extends Component {
   onMove(e, circles, x1, y1, x2, y2) {
     if (this.state.index === 0) {
       this.props.handleChange("from", [
-        this.setXInBounds(x1 + e.movementX),
-        this.setYInBounds(y1 + e.movementY)
+        this.setXInBounds(e.pageX),
+        this.setYInBounds(e.pageY)
       ]);
     } else if (this.state.index === circles.length - 1) {
       this.props.handleChange("to", [
-        this.setXInBounds(x2 + e.movementX),
-        this.setYInBounds(y2 + e.movementY)
+        this.setXInBounds(e.pageX),
+        this.setYInBounds(e.pageY)
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
@@ -148,7 +148,7 @@ class GradientTool extends Component {
   }
 
   createCircles(e, x1, y1, x2, y2) {
-    console.log(x1, y1, x2, y2, e.clientX, e.clientY);
+    // console.log(x1, y1, x2, y2, e.clientX, e.clientY);
     // let pointPositionFromStart = this.getDistanceBetweenPoints(
     //   x1,
     //   y1,
@@ -157,30 +157,37 @@ class GradientTool extends Component {
     // );
     // let totalDistance = this.getDistanceBetweenPoints(x1, y1, x2, y2);
     // console.log(pointPositionFromStart, totalDistance);
-    // let closestPointsOnLine = this.getClosestPointToLine(
-    //   x1 e.clientX,
-    //   e.clientY,
-    //   x1,
-    //   y1,
-    //   x2,
-    //   y2
-    // );
-    // let closestPointsOnLineInFraction = this.getClosestPointToLineInFraction(
-    //   closestPointsOnLine,
-    //   x1,
-    //   y1,
-    //   x2,
-    //   y2
-    // );
-    // let stops = this.props.stops;
-    // stops.push({
-    //   position: pointPositionFromStart / totalDistance,
-    //   color: "#FFFFFF"
-    // });
-    // stops.sort(function(a, b) {
-    //   return a.position - b.position;
-    // });
-    // this.props.handleChange("other", stops);
+    let closestPointsOnLine = this.getClosestPointToLine(
+      e.clientX,
+      e.clientY,
+      x1,
+      y1,
+      x2,
+      y2
+    );
+    let closestPointsOnLineInFraction = this.getClosestPointToLineInFraction(
+      closestPointsOnLine,
+      x1,
+      y1,
+      x2,
+      y2
+    );
+    let stops = this.props.stops;
+    let newStop = {
+      position: closestPointsOnLineInFraction,
+      color: "#FFFFFF"
+    };
+    stops.push(newStop);
+    stops.sort(function(a, b) {
+      return a.position - b.position;
+    });
+    let index = stops.findIndex(stop => {
+      if (stop === newStop) return true;
+      return false;
+    });
+    this.setState({ index, dragging: true }, () => {
+      this.props.handleChange("other", stops);
+    });
   }
 
   render() {
@@ -217,20 +224,33 @@ class GradientTool extends Component {
             y2={y2}
             stroke="#232b2b"
             strokeWidth={2}
-            id={"therect"}
+          ></line>
+          <line
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            strokeOpacity={0}
+            stroke="red"
+            fillOpacity={0}
+            strokeWidth={5}
             className={"Line"}
-            onClick={e => {
+            onMouseDown={e => {
               this.createCircles(e, x1, y1, x2, y2);
             }}
           ></line>
           {circles &&
             circles.map((circle, index) => {
+              let radius = 3;
+              if (index === this.state.index) {
+                radius = 4;
+              }
               return (
                 <circle
                   key={index}
                   cx={circle[0]}
                   cy={circle[1]}
-                  r={3}
+                  r={radius}
                   stroke={"black"}
                   fill={"white"}
                   strokeWidth={1}
