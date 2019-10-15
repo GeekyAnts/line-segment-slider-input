@@ -14,6 +14,10 @@ class SVGContainer extends Component {
           color: "white"
         },
         {
+          position: 0.2,
+          color: "white"
+        },
+        {
           position: 1,
           color: "white"
         }
@@ -26,26 +30,29 @@ class SVGContainer extends Component {
       this.setState({ from: handle });
     } else if (type === "to") {
       this.setState({ to: handle });
+    } else {
+      this.setState({ stops: handle });
     }
   }
 
   render() {
     return (
       <div
-        style={
-          {
-            // margin: "30px"
-          }
-        }
+        style={{
+          margin: "30px"
+        }}
       >
         <GradientTool
           width={500}
           height={500}
+          // x={30}
+          // y={30}
           from={this.state.from}
           to={this.state.to}
           stops={this.state.stops}
-          handleChange={this.handleChange}
+          handleChange={this.handleChange.bind(this)}
         />
+        <pre>{`SVG Container State: ${JSON.stringify(this.state)}`}</pre>
       </div>
     );
   }

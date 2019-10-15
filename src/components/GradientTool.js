@@ -6,50 +6,19 @@ class GradientTool extends Component {
     super(props);
 
     this.state = {
-      fromX: this.props.from[0],
-      fromY: this.props.from[1],
-      toX: this.props.to[0],
-      toY: this.props.to[1],
-      x1: null,
-      y1: null,
-      x2: null,
-      y2: null,
-      stops: this.props.stops,
-      circles: [],
       dragging: false,
-      index: null
+      index: null,
+      info: ""
     };
   }
 
-  componentDidMount() {
-    this.calculateToolData();
-  }
+  offsetX = 0;
+  offsetY = 0;
 
-  calculateToolData() {
-    let stops = this.state.stops;
-
-    let x1 = this.state.fromX * this.props.width;
-    let y1 = this.state.fromY * this.props.height;
-
-    let x2 = this.state.toX * this.props.width;
-    let y2 = this.state.toY * this.props.height;
-
+  calculateToolData(stops, x1, y1, x2, y2) {
     let circles = this.getCircleCoordinates(stops, x1, y1, x2, y2);
 
-    this.setState({
-      x1,
-      y1,
-      x2,
-      y2,
-      circles
-    });
-  }
-
-  calculateSlope(x1, y1, x2, y2) {
-    let slope = (y2 - y1) / (x2 - x1);
-    this.setState({
-      slope
-    });
+    return circles;
   }
 
   getCircleCoordinates(stops, x1, y1, x2, y2) {
@@ -83,42 +52,36 @@ class GradientTool extends Component {
     });
   }
 
-  getA() {
-    return this.state.y2 - this.state.y1;
+  getCoefficients(x1, y1, x2, y2) {
+    return {
+      a: y2 - y1,
+      b: x1 - x2,
+      c: x2 * y1 - x1 * y2
+    };
   }
 
-  getB() {
-    return this.state.x1 - this.state.x2;
-  }
+  getClosestPointToLine(x, y, x1, y1, x2, y2) {
+    let { a, b, c } = this.getCoefficients(x1, y1, x2, y2);
 
-  getC() {
-    return this.state.x2 * this.state.y1 - this.state.x1 * this.state.y2;
-  }
-
-  getClosestPointToLine(x, y) {
-    let a = this.getA();
-    let b = this.getB();
-    let c = this.getC();
-
-    //TODO: (a * a + b * b) shouldn't be zero
+    //WARNING: (a * a + b * b) shouldn't be zero
     let denominator = a * a + b * b;
-    let cX = this.state.x1;
-    let cY = this.state.y1;
+    let cX = x1;
+    let cY = y1;
     if (denominator !== 0) {
       cX = (b * (b * x - a * y) - a * c) / denominator;
       cY = (a * (-1 * b * x + a * y) - b * c) / denominator;
     }
 
-    let minX = Math.min(this.state.x1, this.state.x2);
-    let maxX = Math.max(this.state.x1, this.state.x2);
+    let minX = Math.min(x1, x2);
+    let maxX = Math.max(x1, x2);
     if (cX < minX) {
       cX = minX;
     } else if (cX > maxX) {
       cX = maxX;
     }
 
-    let minY = Math.min(this.state.y1, this.state.y2);
-    let maxY = Math.max(this.state.y1, this.state.y2);
+    let minY = Math.min(y1, y2);
+    let maxY = Math.max(y1, y2);
     if (cY < minY) {
       cY = minY;
     } else if (cY > maxY) {
@@ -135,17 +98,12 @@ class GradientTool extends Component {
     return Math.sqrt(a * a + b * b);
   }
 
-  getClosestPointToLineInFraction(coordinates) {
-    let totalLength = this.getDistanceBetweenPoints(
-      this.state.x1,
-      this.state.y1,
-      this.state.x2,
-      this.state.y2
-    );
+  getClosestPointToLineInFraction(coordinates, x1, y1, x2, y2) {
+    let totalLength = this.getDistanceBetweenPoints(x1, y1, x2, y2);
 
     let lengthOfClosestPoint = this.getDistanceBetweenPoints(
-      this.state.x1,
-      this.state.y1,
+      x1,
+      y1,
       coordinates[0],
       coordinates[1]
     );
@@ -153,55 +111,85 @@ class GradientTool extends Component {
     return lengthOfClosestPoint / totalLength;
   }
 
-  onMove(e) {
+  onMove(e, circles, x1, y1, x2, y2) {
     if (this.state.index === 0) {
-      this.setState({
-        fromX: this.setXInBounds(e.clientX),
-        fromY: this.setYInBounds(e.clientY)
-      });
-    } else if (this.state.index === this.state.circles.length - 1) {
-      this.setState({
-        toX: this.setXInBounds(e.clientX),
-        toY: this.setYInBounds(e.clientY)
-      });
+      this.props.handleChange("from", [
+        this.setXInBounds(x1 + e.movementX),
+        this.setYInBounds(y1 + e.movementY)
+      ]);
+    } else if (this.state.index === circles.length - 1) {
+      this.props.handleChange("to", [
+        this.setXInBounds(x2 + e.movementX),
+        this.setYInBounds(y2 + e.movementY)
+      ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        e.clientX,
-        e.clientY
+        e.pageX,
+        e.pageY,
+        x1,
+        y1,
+        x2,
+        y2
       );
       let closestPointsOnLineInFraction = this.getClosestPointToLineInFraction(
-        closestPointsOnLine
+        closestPointsOnLine,
+        x1,
+        y1,
+        x2,
+        y2
       );
-      let stops = this.state.stops;
+      let stops = this.props.stops;
       stops[this.state.index] = {
         position: closestPointsOnLineInFraction,
         color: stops[this.state.index].color
       };
-      //TODO: Callback
-      this.setState(stops);
+      this.props.handleChange("other", stops);
     }
-    this.calculateToolData();
   }
 
-  createCircles(e) {
-    console.log(e);
-    let closestPointsOnLine = this.getClosestPointToLine(e.clientX, e.clientY);
-    let closestPointsOnLineInFraction = this.getClosestPointToLineInFraction(
-      closestPointsOnLine
-    );
-    let stops = this.state.stops;
-    stops.push({
-      position: closestPointsOnLineInFraction,
-      color: "#FFFFFF"
-    });
-    stops.sort(function(a, b) {
-      return a.position - b.position;
-    });
-    this.setState(stops);
-    this.calculateToolData();
+  createCircles(e, x1, y1, x2, y2) {
+    console.log(x1, y1, x2, y2, e.clientX, e.clientY);
+    // let pointPositionFromStart = this.getDistanceBetweenPoints(
+    //   x1,
+    //   y1,
+    //   e.clientX,
+    //   e.clientY
+    // );
+    // let totalDistance = this.getDistanceBetweenPoints(x1, y1, x2, y2);
+    // console.log(pointPositionFromStart, totalDistance);
+    // let closestPointsOnLine = this.getClosestPointToLine(
+    //   x1 e.clientX,
+    //   e.clientY,
+    //   x1,
+    //   y1,
+    //   x2,
+    //   y2
+    // );
+    // let closestPointsOnLineInFraction = this.getClosestPointToLineInFraction(
+    //   closestPointsOnLine,
+    //   x1,
+    //   y1,
+    //   x2,
+    //   y2
+    // );
+    // let stops = this.props.stops;
+    // stops.push({
+    //   position: pointPositionFromStart / totalDistance,
+    //   color: "#FFFFFF"
+    // });
+    // stops.sort(function(a, b) {
+    //   return a.position - b.position;
+    // });
+    // this.props.handleChange("other", stops);
   }
 
   render() {
+    let x1 = this.props.from[0] * this.props.width;
+    let y1 = this.props.from[1] * this.props.height;
+    let x2 = this.props.to[0] * this.props.width;
+    let y2 = this.props.to[1] * this.props.height;
+
+    let circles = this.calculateToolData(this.props.stops, x1, y1, x2, y2);
     return (
       <>
         <svg
@@ -218,25 +206,25 @@ class GradientTool extends Component {
           onMouseMove={e => {
             e.persist();
             if (this.state.dragging) {
-              this.onMove(e);
+              this.onMove(e, circles, x1, y1, x2, y2);
             }
           }}
         >
           <line
-            x1={this.state.x1}
-            y1={this.state.y1}
-            x2={this.state.x2}
-            y2={this.state.y2}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
             stroke="#232b2b"
             strokeWidth={2}
             id={"therect"}
             className={"Line"}
             onClick={e => {
-              this.createCircles(e);
+              this.createCircles(e, x1, y1, x2, y2);
             }}
           ></line>
-          {this.state.circles &&
-            this.state.circles.map((circle, index) => {
+          {circles &&
+            circles.map((circle, index) => {
               return (
                 <circle
                   key={index}
@@ -248,16 +236,19 @@ class GradientTool extends Component {
                   strokeWidth={1}
                   onMouseDown={e => {
                     e.persist();
+                    this.offsetX = e.pageX;
+                    this.offsetY = e.pageY;
                     this.setState({
                       dragging: true,
-                      index: index
+                      index
                     });
                   }}
                 ></circle>
               );
             })}
         </svg>
-        <pre>{JSON.stringify(this.state, 4)}</pre>
+        <pre>{`Gradient Tool State: ${JSON.stringify(this.state)}`}</pre>
+        <pre>{`Gradient Tool Props: ${JSON.stringify(this.props)}`}</pre>
       </>
     );
   }
