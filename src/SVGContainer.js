@@ -54,25 +54,19 @@ class SVGContainer extends Component {
 
   render() {
     return (
-      <div
-        style={{
-          marginLeft: "30px",
-          marginRight: "40px",
-          paddingLeft: "30px"
-        }}
-      >
+      <>
         <GradientTool
           width={500}
           height={500}
-          index={this.state.index}
-          changeIndex={this.changeIndex.bind(this)}
           from={this.state.from}
           to={this.state.to}
           stops={this.state.stops}
+          index={this.state.index}
+          changeIndex={this.changeIndex.bind(this)}
           handleMove={this.handleMove.bind(this)}
           removeHandle={this.removeHandle.bind(this)}
         />
-      </div>
+      </>
     );
   }
 }
