@@ -201,7 +201,7 @@ class GradientTool extends Component {
 
     let circles = this.calculateToolData(this.props.stops, x1, y1, x2, y2);
     return (
-      <>
+      <div>
         <svg
           tabIndex={0}
           onKeyDown={e => {
@@ -213,7 +213,7 @@ class GradientTool extends Component {
           ref={this.selector}
           height={this.props.height}
           width={this.props.width}
-          style={{ backgroundColor: "black" }}
+          style={{ backgroundColor: "transparent" }}
           onMouseUp={e => {
             e.persist();
             this.stopDrag();
@@ -306,7 +306,7 @@ class GradientTool extends Component {
               );
             })}
         </svg>
-      </>
+      </div>
     );
   }
 }
