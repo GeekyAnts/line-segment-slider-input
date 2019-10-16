@@ -202,7 +202,7 @@ class GradientTool extends Component {
         <svg
           height={this.props.height}
           width={this.props.width}
-          style={{ backgroundColor: "blue" }}
+          style={{ backgroundColor: "white" }}
           onMouseUp={e => {
             e.persist();
             this.stopDrag();
@@ -216,14 +216,62 @@ class GradientTool extends Component {
               this.onMove(e, circles, x1, y1, x2, y2);
             }
           }}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
         >
+          <defs>
+            <filter id="dropshadow" height="130%">
+              <feDropShadow dx="1" dy="1.5" stdDeviation="1.3" />
+              {/* <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+              <feOffset dx="0" dy="0" result="offOut" />
+              <feComponentTransfer>
+                <feFuncA type="linear" slope="1" />
+              </feComponentTransfer>
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge> */}
+            </filter>
+            <filter
+              id="dropshadowcircle"
+              x="-40%"
+              y="-40%"
+              width="200%"
+              height="200%"
+            >
+              <feDropShadow dx="0.1" dy="0.6" stdDeviation="1.3" />
+
+              {/* <feGaussianBlur in="SourceAlpha" stdDeviation="2" /> */}
+              {/* <feOffset dx="10" dy="10" result="offsetblur" /> */}
+              {/* <feComponentTransfer>
+                <feFuncA type="linear" slope="1" />
+              </feComponentTransfer>
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge> */}
+            </filter>
+            {/* <filter id="f2" x="0" y="0" width="200%" height="200%">
+              <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
+              <feColorMatrix
+                result="matrixOut"
+                in="offOut"
+                type="matrix"
+                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+              />
+              <feGaussianBlur result="blurOut" in="offOut" stdDeviation="6" />
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+            </filter> */}
+          </defs>
           <line
             x1={x1}
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="#232b2b"
-            strokeWidth={2}
+            stroke="white"
+            // stroke="#232b2b"
+            strokeWidth={1}
+            filter="url(#dropshadow)"
           ></line>
           <line
             x1={x1}
@@ -241,9 +289,9 @@ class GradientTool extends Component {
           ></line>
           {circles &&
             circles.map((circle, index) => {
-              let radius = 3;
+              let radius = 4;
               if (index === this.state.index) {
-                radius = 4;
+                radius = 5;
               }
               return (
                 <circle
@@ -251,8 +299,9 @@ class GradientTool extends Component {
                   cx={circle[0]}
                   cy={circle[1]}
                   r={radius}
-                  stroke={"black"}
+                  stroke={"white"}
                   fill={"white"}
+                  filter={"url(#dropshadowcircle)"}
                   strokeWidth={1}
                   onMouseDown={e => {
                     e.persist();
