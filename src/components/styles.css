@@ -1,3 +1,7 @@
+*:focus {
+  outline: none;
+}
+
 .Line:hover {
   cursor: pointer;
 }

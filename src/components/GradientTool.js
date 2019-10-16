@@ -7,13 +7,20 @@ class GradientTool extends Component {
 
     this.state = {
       dragging: false,
-      index: null,
-      info: ""
+      x: null,
+      y: null
     };
+
+    this.selector = React.createRef();
   }
 
-  offsetX = 0;
-  offsetY = 0;
+  componentDidMount() {
+    let self = this.selector.current.getBoundingClientRect();
+    this.setState({
+      x: self.x,
+      y: self.y
+    });
+  }
 
   calculateToolData(stops, x1, y1, x2, y2) {
     let circles = this.getCircleCoordinates(stops, x1, y1, x2, y2);
@@ -47,8 +54,7 @@ class GradientTool extends Component {
 
   stopDrag() {
     this.setState({
-      dragging: false,
-      index: null
+      dragging: false
     });
   }
 
@@ -112,20 +118,20 @@ class GradientTool extends Component {
   }
 
   onMove(e, circles, x1, y1, x2, y2) {
-    if (this.state.index === 0) {
-      this.props.handleChange("from", [
-        this.setXInBounds(e.pageX),
-        this.setYInBounds(e.pageY)
+    if (this.props.index === 0) {
+      this.props.handleMove("from", [
+        this.setXInBounds(e.pageX - this.state.x),
+        this.setYInBounds(e.pageY - this.state.y)
       ]);
-    } else if (this.state.index === circles.length - 1) {
-      this.props.handleChange("to", [
-        this.setXInBounds(e.pageX),
-        this.setYInBounds(e.pageY)
+    } else if (this.props.index === circles.length - 1) {
+      this.props.handleMove("to", [
+        this.setXInBounds(e.pageX - this.state.x),
+        this.setYInBounds(e.pageY - this.state.y)
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        e.pageX,
-        e.pageY,
+        e.pageX - this.state.x,
+        e.pageY - this.state.y,
         x1,
         y1,
         x2,
@@ -139,27 +145,18 @@ class GradientTool extends Component {
         y2
       );
       let stops = this.props.stops;
-      stops[this.state.index] = {
+      stops[this.props.index] = {
         position: closestPointsOnLineInFraction,
-        color: stops[this.state.index].color
+        color: stops[this.props.index].color
       };
-      this.props.handleChange("other", stops);
+      this.props.handleMove("other", stops);
     }
   }
 
   createCircles(e, x1, y1, x2, y2) {
-    // console.log(x1, y1, x2, y2, e.clientX, e.clientY);
-    // let pointPositionFromStart = this.getDistanceBetweenPoints(
-    //   x1,
-    //   y1,
-    //   e.clientX,
-    //   e.clientY
-    // );
-    // let totalDistance = this.getDistanceBetweenPoints(x1, y1, x2, y2);
-    // console.log(pointPositionFromStart, totalDistance);
     let closestPointsOnLine = this.getClosestPointToLine(
-      e.clientX,
-      e.clientY,
+      e.pageX - this.state.x,
+      e.pageY - this.state.y,
       x1,
       y1,
       x2,
@@ -185,9 +182,15 @@ class GradientTool extends Component {
       if (stop === newStop) return true;
       return false;
     });
-    this.setState({ index, dragging: true }, () => {
-      this.props.handleChange("other", stops);
-    });
+    this.setState(
+      { dragging: true },
+      () => {
+        this.props.changeIndex(index);
+      },
+      () => {
+        this.props.handleMove("other", stops);
+      }
+    );
   }
 
   render() {
@@ -200,9 +203,17 @@ class GradientTool extends Component {
     return (
       <>
         <svg
+          tabIndex={0}
+          onKeyDown={e => {
+            e.persist();
+            if (e.key === "Backspace") {
+              this.props.removeHandle();
+            }
+          }}
+          ref={this.selector}
           height={this.props.height}
           width={this.props.width}
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: "black" }}
           onMouseUp={e => {
             e.persist();
             this.stopDrag();
@@ -221,16 +232,12 @@ class GradientTool extends Component {
         >
           <defs>
             <filter id="dropshadow" height="130%">
-              <feDropShadow dx="1" dy="1.5" stdDeviation="1.3" />
-              {/* <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-              <feOffset dx="0" dy="0" result="offOut" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="1" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge> */}
+              <feDropShadow
+                dx="1"
+                dy="1.5"
+                floodColor="black"
+                stdDeviation="1.5"
+              />
             </filter>
             <filter
               id="dropshadowcircle"
@@ -239,29 +246,13 @@ class GradientTool extends Component {
               width="200%"
               height="200%"
             >
-              <feDropShadow dx="0.1" dy="0.6" stdDeviation="1.3" />
-
-              {/* <feGaussianBlur in="SourceAlpha" stdDeviation="2" /> */}
-              {/* <feOffset dx="10" dy="10" result="offsetblur" /> */}
-              {/* <feComponentTransfer>
-                <feFuncA type="linear" slope="1" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge> */}
-            </filter>
-            {/* <filter id="f2" x="0" y="0" width="200%" height="200%">
-              <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
-              <feColorMatrix
-                result="matrixOut"
-                in="offOut"
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+              <feDropShadow
+                dx="0.1"
+                dy="0.6"
+                stdDeviation="1.3"
+                floodColor="black"
               />
-              <feGaussianBlur result="blurOut" in="offOut" stdDeviation="6" />
-              <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-            </filter> */}
+            </filter>
           </defs>
           <line
             x1={x1}
@@ -269,7 +260,6 @@ class GradientTool extends Component {
             x2={x2}
             y2={y2}
             stroke="white"
-            // stroke="#232b2b"
             strokeWidth={1}
             filter="url(#dropshadow)"
           ></line>
@@ -290,7 +280,7 @@ class GradientTool extends Component {
           {circles &&
             circles.map((circle, index) => {
               let radius = 4;
-              if (index === this.state.index) {
+              if (index === this.props.index) {
                 radius = 5;
               }
               return (
@@ -305,19 +295,17 @@ class GradientTool extends Component {
                   strokeWidth={1}
                   onMouseDown={e => {
                     e.persist();
-                    this.offsetX = e.pageX;
-                    this.offsetY = e.pageY;
-                    this.setState({
-                      dragging: true,
-                      index
-                    });
+                    this.setState(
+                      {
+                        dragging: true
+                      },
+                      this.props.changeIndex(index)
+                    );
                   }}
                 ></circle>
               );
             })}
         </svg>
-        <pre>{`Gradient Tool State: ${JSON.stringify(this.state)}`}</pre>
-        <pre>{`Gradient Tool Props: ${JSON.stringify(this.props)}`}</pre>
       </>
     );
   }
