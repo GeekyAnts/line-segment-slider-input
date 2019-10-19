@@ -268,7 +268,9 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 ```
 
-| Property | Type   | Description                                                                                 |
-| -------- | ------ | ------------------------------------------------------------------------------------------- |
-| width    | number | Takes a numerical input which represents the width of canvas on which this svg will render  |
-| height   | number | Takes a numerical input which represents the height of canvas on which this svg will render |
+| Property | Type          | Description                                                                                                                 |
+| -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| width    | number        | Takes a numerical input which represents the width of canvas on which this svg will render                                  |
+| height   | number        | Takes a numerical input which represents the height of canvas on which this svg will render                                 |
+| from     | Array<number> | Takes an array of numbers of size 2 that represent the starting point of the line in fraction of the total width and height |
+| to       | Array<number> | Takes an array of numbers of size 2 that represent the ending point of the line in fraction of the total width and height   |
