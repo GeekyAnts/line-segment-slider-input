@@ -268,9 +268,14 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 ```
 
-| Property | Type          | Description                                                                                                                 |
-| -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| width    | number        | Takes a numerical input which represents the width of canvas on which this svg will render                                  |
-| height   | number        | Takes a numerical input which represents the height of canvas on which this svg will render                                 |
-| from     | Array<number> | Takes an array of numbers of size 2 that represent the starting point of the line in fraction of the total width and height |
-| to       | Array<number> | Takes an array of numbers of size 2 that represent the ending point of the line in fraction of the total width and height   |
+| Property     | Type                   | Description                                                                                                                                                                                              |
+| ------------ | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| width        | number                 | Takes a numerical input which represents the width of canvas on which this svg will render.                                                                                                              |
+| height       | number                 | Takes a numerical input which represents the height of canvas on which this svg will render.                                                                                                             |
+| from         | Array                  | Takes an array of numbers of size 2 that represent the starting point of the line in fraction of the total width and height.                                                                             |
+| to           | Array                  | Takes an array of numbers of size 2 that represent the ending point of the line in fraction of the total width and height.                                                                               |
+| stops        | Array                  | Takes an array of objects that have properties ** position ** and ** color **. Position represents the ratio of distance between the start point and that point to that of the total length of the line. |
+| index        | number                 | It represents the index of circle that is currently active                                                                                                                                               |
+| changeIndex  | function(index)        | This can be used to change the active index in the parent component                                                                                                                                      |
+| handleMove   | function(type, handle) | This can be used to change the value of stops or the edges. type can be **from**, **to** or **other**. **other** returns an array of stops and can be used to change the array of stops.                 |
+| removeHandle | function()             | This removes the active handle if it isn't the start or the end point. It is triggered when someone pressed **delete** key.                                                                              |
