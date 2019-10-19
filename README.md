@@ -172,6 +172,7 @@ A line rendering tool that can be repositioned and resized by drag and drop. Sto
 
 ![Line Segment Slider Input demo](https://media.giphy.com/media/LkkHdv6w8L3AOsXCbd/giphy.gif)
 
+
 ## Installation
 
 ``` $ sudo npm install line-segment-slider-input ```
@@ -266,3 +267,8 @@ class App extends React.Component<{}, StateType> {
 ReactDOM.render(<App />, document.getElementById("root"));
 
 ```
+
+| Property | Type   | Description                                                                                 |
+| -------- | ------ | ------------------------------------------------------------------------------------------- |
+| width    | number | Takes a numerical input which represents the width of canvas on which this svg will render  |
+| height   | number | Takes a numerical input which represents the height of canvas on which this svg will render |
