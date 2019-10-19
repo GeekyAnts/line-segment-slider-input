@@ -167,19 +167,17 @@ Change the `alias` to point to where those packages are actually installed. This
 An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64) -->
 
 # Line Segment Slider Input
----
 
 A line rendering tool that can be repositioned and resized by drag and drop. Stop points may also be added in between and can be moved along the line.
 
+![Line Segment Slider Input demo](https://media.giphy.com/media/LkkHdv6w8L3AOsXCbd/giphy.gif)
 
 ## Installation
----
 
 ``` $ sudo npm install line-segment-slider-input ```
 
 
 ## Usage
----
 
 ```
 import * as React from "react";
