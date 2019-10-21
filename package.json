@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ajamuar/line-segment-slider-input-personal.git"
+    "url": "git+https://github.com/GeekyAnts/line-segment-slider-input.git.git"
   },
   "keywords": [
     "line",
@@ -58,7 +58,7 @@
   "author": "Aditya Jamuar",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ajamuar/line-segment-slider-input-personal/issues"
+    "url": "https://github.com/GeekyAnts/line-segment-slider-input.git/issues"
   },
-  "homepage": "https://github.com/Ajamuar/line-segment-slider-input-personal#readme"
+  "homepage": "https://github.com/GeekyAnts/line-segment-slider-input.git#readme"
 }
