@@ -175,7 +175,7 @@ A line rendering tool that can be repositioned and resized by drag and drop. Sto
 
 ## Installation
 
-``` $ sudo npm install line-segment-slider-input ```
+``` $ npm install --save line-segment-slider-input ```
 
 
 ## Usage
