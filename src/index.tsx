@@ -23,7 +23,10 @@ type StateType = {
   y: number;
 };
 
-export class LineSegmentSliderInput extends Component<PropType, StateType> {
+export default class LineSegmentSliderInput extends Component<
+  PropType,
+  StateType
+> {
   selector: any;
   constructor(props: PropType) {
     super(props);
