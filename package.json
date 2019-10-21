@@ -38,5 +38,27 @@
     "tslib": "^1.10.0",
     "typescript": "^3.6.4"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "description": "<!-- # TSDX React User Guide",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ajamuar/line-segment-slider-input-personal.git"
+  },
+  "keywords": [
+    "line",
+    "line-segment-slider-input",
+    "segment",
+    "slider",
+    "input"
+  ],
+  "author": "Aditya Jamuar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ajamuar/line-segment-slider-input-personal/issues"
+  },
+  "homepage": "https://github.com/Ajamuar/line-segment-slider-input-personal#readme"
 }
