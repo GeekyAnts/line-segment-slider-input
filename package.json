@@ -1,6 +1,6 @@
 {
   "name": "line-segment-slider-input",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "module": "dist/line-segment-slider-input.esm.js",
   "typings": "dist/index.d.ts",
@@ -17,9 +17,7 @@
     "react": ">=16"
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
+    "hooks": {}
   },
   "prettier": {
     "printWidth": 80,
