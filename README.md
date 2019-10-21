@@ -183,7 +183,7 @@ A line rendering tool that can be repositioned and resized by drag and drop. Sto
 ```
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { LineSegmentSliderInput } from "../src/index";
+import LineSegmentSliderInput from "../src/index";
 
 type Stop = {
   position: number;
