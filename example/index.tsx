@@ -1,7 +1,7 @@
 import "react-app-polyfill/ie11";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { LineSegmentSliderInput } from "../src/index";
+import LineSegmentSliderInput from "../src/index";
 
 type Stop = {
   position: number;
@@ -70,6 +70,8 @@ class App extends React.Component<{}, StateType> {
       <LineSegmentSliderInput
         width={500}
         height={500}
+        zoom={1}
+        scroll={{ x: 0, y: 0 }}
         from={this.state.from}
         to={this.state.to}
         stops={this.state.stops}

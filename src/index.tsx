@@ -12,6 +12,8 @@ type PropType = {
   to: Array<number>;
   stops: Array<Stop>;
   index: number;
+  zoom: number;
+  scroll: { x: number; y: number };
   changeIndex: (index: number) => null;
   handleMove: (type: string, handle: Array<number> | Array<Stop>) => null;
   removeHandle: () => null;
@@ -167,6 +169,16 @@ export default class LineSegmentSliderInput extends Component<
     return lengthOfClosestPoint / totalLength;
   }
 
+  getPointWithScrollZoom(point: number, type: "x" | "y") {
+    const { zoom, scroll } = this.props;
+    const newPoint = point / zoom;
+    if (type === "x") {
+      return newPoint + scroll.x;
+    } else {
+      return newPoint + scroll.y;
+    }
+  }
+
   onMove(
     e: any,
     circles: Array<Array<number>>,
@@ -177,18 +189,26 @@ export default class LineSegmentSliderInput extends Component<
   ) {
     if (this.props.index === 0) {
       this.props.handleMove("from", [
-        this.setXInBounds(e.pageX - this.state.x),
-        this.setYInBounds(e.pageY - this.state.y),
+        this.setXInBounds(
+          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
+        ),
+        this.setYInBounds(
+          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
+        ),
       ]);
     } else if (this.props.index === circles.length - 1) {
       this.props.handleMove("to", [
-        this.setXInBounds(e.pageX - this.state.x),
-        this.setYInBounds(e.pageY - this.state.y),
+        this.setXInBounds(
+          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
+        ),
+        this.setYInBounds(
+          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
+        ),
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        e.pageX - this.state.x,
-        e.pageY - this.state.y,
+        this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
+        this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
         x1,
         y1,
         x2,
@@ -212,8 +232,8 @@ export default class LineSegmentSliderInput extends Component<
 
   createCircles(e: any, x1: number, y1: number, x2: number, y2: number) {
     let closestPointsOnLine = this.getClosestPointToLine(
-      e.pageX - this.state.x,
-      e.pageY - this.state.y,
+      this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
+      this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
       x1,
       y1,
       x2,
@@ -250,7 +270,7 @@ export default class LineSegmentSliderInput extends Component<
     let y1 = this.props.from[1] * this.props.height;
     let x2 = this.props.to[0] * this.props.width;
     let y2 = this.props.to[1] * this.props.height;
-
+    const { zoom } = this.props;
     let circles = this.calculateToolData(this.props.stops, x1, y1, x2, y2);
     return (
       <div>
@@ -312,7 +332,7 @@ export default class LineSegmentSliderInput extends Component<
             x2={x2}
             y2={y2}
             stroke="white"
-            strokeWidth={1}
+            strokeWidth={1 / zoom}
             filter="url(#dropshadow)"
           ></line>
           <line
@@ -324,7 +344,7 @@ export default class LineSegmentSliderInput extends Component<
             strokeOpacity={0}
             stroke="red"
             fillOpacity={0}
-            strokeWidth={10}
+            strokeWidth={10 / zoom}
             onMouseOver={() => {}}
             onMouseDown={e => {
               this.createCircles(e, x1, y1, x2, y2);
@@ -332,9 +352,9 @@ export default class LineSegmentSliderInput extends Component<
           ></line>
           {circles &&
             circles.map((circle, index) => {
-              let radius = 4;
+              let radius = 4 / zoom;
               if (index === this.props.index) {
-                radius = 5;
+                radius = 5 / zoom;
               }
               return (
                 <circle
