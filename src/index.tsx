@@ -331,9 +331,17 @@ export default class LineSegmentSliderInput extends Component<
             y1={y1}
             x2={x2}
             y2={y2}
+            stroke="black"
+            strokeWidth={2.5 / zoom}
+            opacity={0.3}
+          ></line>
+          <line
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
             stroke="white"
-            strokeWidth={1 / zoom}
-            filter="url(#dropshadow)"
+            strokeWidth={1.75 / zoom}
           ></line>
           <line
             style={{ cursor: "pointer" }}
@@ -357,27 +365,47 @@ export default class LineSegmentSliderInput extends Component<
                 radius = 5 / zoom;
               }
               return (
-                <circle
-                  key={index}
-                  cx={circle[0]}
-                  cy={circle[1]}
-                  r={radius}
-                  stroke={"white"}
-                  fill={"white"}
-                  filter={"url(#dropshadowcircle)"}
-                  strokeWidth={1}
-                  onMouseDown={e => {
-                    e.persist();
-                    this.setState(
-                      {
-                        dragging: true,
-                      },
-                      () => {
-                        this.props.changeIndex(index);
-                      }
-                    );
-                  }}
-                ></circle>
+                <>
+                  <circle
+                    key={index}
+                    cx={circle[0]}
+                    cy={circle[1]}
+                    r={radius}
+                    stroke={"white"}
+                    fill={"white"}
+                    filter={"url(#dropshadowcircle)"}
+                    strokeWidth={1}
+                    onMouseDown={e => {
+                      e.persist();
+                      this.setState(
+                        {
+                          dragging: true,
+                        },
+                        () => {
+                          this.props.changeIndex(index);
+                        }
+                      );
+                    }}
+                  ></circle>
+                  <circle
+                    key={index}
+                    cx={circle[0]}
+                    cy={circle[1]}
+                    r={radius - 1}
+                    fill={this.props.stops[index].color}
+                    onMouseDown={e => {
+                      e.persist();
+                      this.setState(
+                        {
+                          dragging: true,
+                        },
+                        () => {
+                          this.props.changeIndex(index);
+                        }
+                      );
+                    }}
+                  ></circle>
+                </>
               );
             })}
         </svg>
