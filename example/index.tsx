@@ -25,15 +25,15 @@ class App extends React.Component<{}, StateType> {
       stops: [
         {
           position: 0,
-          color: "white",
+          color: "red",
         },
         {
           position: 0.2,
-          color: "white",
+          color: "blue",
         },
         {
           position: 1,
-          color: "white",
+          color: "green",
         },
       ],
     };
