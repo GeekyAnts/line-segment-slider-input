@@ -1,62 +1,62 @@
 {
-  "name": "line-segment-slider-input",
-  "version": "0.1.2",
-  "main": "dist/index.js",
-  "module": "dist/line-segment-slider-input.esm.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test --env=jsdom",
-    "lint": "tsdx lint"
-  },
-  "peerDependencies": {
-    "react": ">=16"
-  },
-  "husky": {
-    "hooks": {}
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": false,
-    "trailingComma": "es5"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.19",
-    "@types/react": "^16.9.9",
-    "@types/react-dom": "^16.9.2",
-    "husky": "^3.0.9",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "tsdx": "^0.10.5",
-    "tslib": "^1.10.0",
-    "typescript": "^3.6.4"
-  },
-  "dependencies": {},
-  "description": "<!-- # TSDX React User Guide",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/GeekyAnts/line-segment-slider-input.git.git"
-  },
-  "keywords": [
-    "line",
-    "line-segment-slider-input",
-    "segment",
-    "slider",
-    "input"
-  ],
-  "author": "Aditya Jamuar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/GeekyAnts/line-segment-slider-input.git/issues"
-  },
-  "homepage": "https://github.com/GeekyAnts/line-segment-slider-input.git#readme"
+    "name": "line-segment-slider-input",
+    "version": "0.1.4",
+    "main": "dist/index.js",
+    "module": "dist/line-segment-slider-input.esm.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "start": "tsdx watch",
+        "build": "tsdx build",
+        "test": "tsdx test --env=jsdom",
+        "lint": "tsdx lint"
+    },
+    "peerDependencies": {
+        "react": ">=16"
+    },
+    "husky": {
+        "hooks": {}
+    },
+    "prettier": {
+        "printWidth": 80,
+        "semi": true,
+        "singleQuote": false,
+        "trailingComma": "es5"
+    },
+    "devDependencies": {
+        "@types/jest": "^24.0.19",
+        "@types/react": "^16.9.9",
+        "@types/react-dom": "^16.9.2",
+        "husky": "^3.0.9",
+        "react": "^16.10.2",
+        "react-dom": "^16.10.2",
+        "tsdx": "^0.10.5",
+        "tslib": "^1.10.0",
+        "typescript": "^3.6.4"
+    },
+    "dependencies": {},
+    "description": "<!-- # TSDX React User Guide",
+    "directories": {
+        "example": "example",
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/GeekyAnts/line-segment-slider-input.git.git"
+    },
+    "keywords": [
+        "line",
+        "line-segment-slider-input",
+        "segment",
+        "slider",
+        "input"
+    ],
+    "author": "Aditya Jamuar",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/GeekyAnts/line-segment-slider-input.git/issues"
+    },
+    "homepage": "https://github.com/GeekyAnts/line-segment-slider-input.git#readme"
 }
