@@ -19,7 +19,14 @@ type PropType = {
   changeIndex: (index: number) => void;
   handleMove: (type: string, handle: Array<number> | Array<Stop>) => void;
   removeHandle: () => void;
-  onClickOutside?: () => void;
+  onClickOutside?: (e: any) => void;
+  onWrapperMouseDown?: (e: any) => void;
+  onWrapperContexMenu?: (e: any) => void;
+  onWrapperDoubleClick?: (e: any) => void;
+  onWrapperMouseOut?: (e: any) => void;
+  onWrapperDrop?: (e: any) => void;
+  onDragOver?: (e: any) => void;
+  onWrapperMouseMove?: (e: any) => void;
 };
 
 type StateType = {
@@ -284,10 +291,18 @@ export default class LineSegmentSliderInput extends Component<
           left: 0,
           right: 0,
         }}
+        onMouseDown={this.props.onWrapperMouseDown}
+        onContextMenu={this.props.onWrapperContexMenu}
+        onDoubleClick={this.props.onWrapperDoubleClick}
+        onMouseOut={this.props.onWrapperMouseOut}
+        onDrop={this.props.onWrapperDrop}
+        onDragOver={this.props.onDragOver}
         onMouseMove={e => {
           e.persist();
           if (this.state.dragging) {
             this.onMove(e, circles, x1, y1, x2, y2);
+          } else if (this.props.onWrapperMouseMove) {
+            this.props.onWrapperMouseMove(e);
           }
         }}
         onMouseUp={e => {
@@ -316,6 +331,24 @@ export default class LineSegmentSliderInput extends Component<
             overflow: "visible",
           }}
           onClick={e => {
+            e.stopPropagation();
+          }}
+          onMouseDown={e => {
+            e.stopPropagation();
+          }}
+          onContextMenu={e => {
+            e.stopPropagation();
+          }}
+          onDoubleClick={e => {
+            e.stopPropagation();
+          }}
+          onMouseOut={e => {
+            e.stopPropagation();
+          }}
+          onDrop={e => {
+            e.stopPropagation();
+          }}
+          onDragOver={e => {
             e.stopPropagation();
           }}
           xmlns="http://www.w3.org/2000/svg"
