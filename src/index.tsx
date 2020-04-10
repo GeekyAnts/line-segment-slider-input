@@ -6,6 +6,8 @@ type Stop = {
 };
 
 type PropType = {
+  x: number;
+  y: number;
   width: number;
   height: number;
   from: Array<number>;
@@ -276,7 +278,6 @@ export default class LineSegmentSliderInput extends Component<
       <div
         style={{
           position: "absolute",
-          // backgroundColor: "grey",
           top: 0,
           bottom: 0,
           left: 0,
@@ -288,26 +289,29 @@ export default class LineSegmentSliderInput extends Component<
             this.onMove(e, circles, x1, y1, x2, y2);
           }
         }}
+        onMouseUp={e => {
+          e.persist();
+          this.stopDrag();
+        }}
+        onKeyDown={e => {
+          e.persist();
+          if (e.key === "Backspace") {
+            this.props.removeHandle();
+          }
+        }}
       >
         <svg
           tabIndex={0}
-          onKeyDown={e => {
-            e.persist();
-            if (e.key === "Backspace") {
-              this.props.removeHandle();
-            }
-          }}
           ref={this.selector}
           height={this.props.height}
           width={this.props.width}
           style={{
+            position: "absolute",
             backgroundColor: "transparent",
+            top: this.props.y,
+            left: this.props.x,
             outline: "none",
             overflow: "visible",
-          }}
-          onMouseUp={e => {
-            e.persist();
-            this.stopDrag();
           }}
           // onMouseLeave={() => {
           //   this.stopDrag();
@@ -373,9 +377,9 @@ export default class LineSegmentSliderInput extends Component<
           />
           {circles &&
             circles.map((circle, index) => {
-              let radius = 5 / zoom;
+              let radius = 4 / zoom;
               if (index === this.props.index) {
-                radius = 7 / zoom;
+                radius = 6 / zoom;
               }
               return (
                 <g key={`wrapper-${index}`}>

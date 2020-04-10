@@ -7,6 +7,8 @@ describe("it", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <LineSegmentSliderInput
+        x={0}
+        y={0}
         width={500}
         height={500}
         from={[0.2, 0.2]}

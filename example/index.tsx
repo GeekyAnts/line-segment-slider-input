@@ -19,8 +19,8 @@ class App extends React.Component<{}, StateType> {
     super(props);
 
     this.state = {
-      from: [0.2, 0.2],
-      to: [0.8, 0.8],
+      from: [0.0, 0.0],
+      to: [1, 1],
       index: -1,
       stops: [
         {
@@ -67,8 +67,18 @@ class App extends React.Component<{}, StateType> {
 
   render() {
     return (
-      <div style={{ height: 500, width: 500, border: "1px solid black" }}>
+      <div
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: "absolute",
+        }}
+      >
         <LineSegmentSliderInput
+          x={20}
+          y={20}
           width={500}
           height={500}
           zoom={1}
