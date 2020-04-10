@@ -90,6 +90,9 @@ class App extends React.Component<{}, StateType> {
           changeIndex={this.changeIndex.bind(this)}
           handleMove={this.handleMove.bind(this)}
           removeHandle={this.removeHandle.bind(this)}
+          onClickOutside={() => {
+            console.log("clicked outside");
+          }}
         />
       </div>
     );

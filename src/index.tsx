@@ -16,9 +16,10 @@ type PropType = {
   index: number;
   zoom: number;
   scroll: { x: number; y: number };
-  changeIndex: (index: number) => null;
-  handleMove: (type: string, handle: Array<number> | Array<Stop>) => null;
-  removeHandle: () => null;
+  changeIndex: (index: number) => void;
+  handleMove: (type: string, handle: Array<number> | Array<Stop>) => void;
+  removeHandle: () => void;
+  onClickOutside?: () => void;
 };
 
 type StateType = {
@@ -293,6 +294,7 @@ export default class LineSegmentSliderInput extends Component<
           e.persist();
           this.stopDrag();
         }}
+        onClick={this.props.onClickOutside}
         onKeyDown={e => {
           e.persist();
           if (e.key === "Backspace") {
@@ -313,9 +315,9 @@ export default class LineSegmentSliderInput extends Component<
             outline: "none",
             overflow: "visible",
           }}
-          // onMouseLeave={() => {
-          //   this.stopDrag();
-          // }}
+          onClick={e => {
+            e.stopPropagation();
+          }}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
