@@ -21,6 +21,7 @@ type PropType = {
   removeHandle: () => void;
   onClickOutside?: (e: any) => void;
   onWrapperMouseDown?: (e: any) => void;
+  onWrapperMouseUp?: (e: any) => void;
   onWrapperContexMenu?: (e: any) => void;
   onWrapperDoubleClick?: (e: any) => void;
   onWrapperMouseOut?: (e: any) => void;
@@ -307,7 +308,11 @@ export default class LineSegmentSliderInput extends Component<
         }}
         onMouseUp={e => {
           e.persist();
-          this.stopDrag();
+          if (this.state.dragging) {
+            this.stopDrag();
+          } else if (this.props.onWrapperMouseUp) {
+            this.props.onWrapperMouseUp(e);
+          }
         }}
         onClick={this.props.onClickOutside}
         onKeyDown={e => {

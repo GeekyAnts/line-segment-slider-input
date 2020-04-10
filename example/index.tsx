@@ -96,6 +96,9 @@ class App extends React.Component<{}, StateType> {
           onWrapperMouseDown={(e: any) => {
             console.log("mouse down", e);
           }}
+          onWrapperMouseUp={(e: any) => {
+            console.log("mouse up", e);
+          }}
         />
       </div>
     );
