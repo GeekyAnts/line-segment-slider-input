@@ -31,7 +31,9 @@ describe("it", () => {
         zoom={1}
         scroll={{ x: 0, y: 0 }}
         // @ts-ignore
-        changeIndex={(index: number) => null}
+        changeIndex={(index: number) => {
+          return;
+        }}
         handleMove={(
           // @ts-ignore
           type: string,
@@ -42,8 +44,12 @@ describe("it", () => {
                 position: number;
                 color: string;
               }>
-        ) => null}
-        removeHandle={() => null}
+        ) => {
+          return;
+        }}
+        removeHandle={() => {
+          return;
+        }}
       />,
       div
     );
