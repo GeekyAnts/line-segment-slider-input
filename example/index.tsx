@@ -67,19 +67,21 @@ class App extends React.Component<{}, StateType> {
 
   render() {
     return (
-      <LineSegmentSliderInput
-        width={500}
-        height={500}
-        zoom={1}
-        scroll={{ x: 0, y: 0 }}
-        from={this.state.from}
-        to={this.state.to}
-        stops={this.state.stops}
-        index={this.state.index}
-        changeIndex={this.changeIndex.bind(this)}
-        handleMove={this.handleMove.bind(this)}
-        removeHandle={this.removeHandle.bind(this)}
-      />
+      <div style={{ height: 500, width: 500, border: "1px solid black" }}>
+        <LineSegmentSliderInput
+          width={500}
+          height={500}
+          zoom={1}
+          scroll={{ x: 0, y: 0 }}
+          from={this.state.from}
+          to={this.state.to}
+          stops={this.state.stops}
+          index={this.state.index}
+          changeIndex={this.changeIndex.bind(this)}
+          handleMove={this.handleMove.bind(this)}
+          removeHandle={this.removeHandle.bind(this)}
+        />
+      </div>
     );
   }
 }

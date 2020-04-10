@@ -273,7 +273,22 @@ export default class LineSegmentSliderInput extends Component<
     const { zoom } = this.props;
     let circles = this.calculateToolData(this.props.stops, x1, y1, x2, y2);
     return (
-      <div>
+      <div
+        style={{
+          position: "absolute",
+          // backgroundColor: "grey",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
+        onMouseMove={e => {
+          e.persist();
+          if (this.state.dragging) {
+            this.onMove(e, circles, x1, y1, x2, y2);
+          }
+        }}
+      >
         <svg
           tabIndex={0}
           onKeyDown={e => {
@@ -285,20 +300,18 @@ export default class LineSegmentSliderInput extends Component<
           ref={this.selector}
           height={this.props.height}
           width={this.props.width}
-          style={{ backgroundColor: "transparent", outline: "none" }}
+          style={{
+            backgroundColor: "transparent",
+            outline: "none",
+            overflow: "visible",
+          }}
           onMouseUp={e => {
             e.persist();
             this.stopDrag();
           }}
-          onMouseLeave={() => {
-            this.stopDrag();
-          }}
-          onMouseMove={e => {
-            e.persist();
-            if (this.state.dragging) {
-              this.onMove(e, circles, x1, y1, x2, y2);
-            }
-          }}
+          // onMouseLeave={() => {
+          //   this.stopDrag();
+          // }}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
@@ -344,7 +357,7 @@ export default class LineSegmentSliderInput extends Component<
             strokeWidth={1.75 / zoom}
           ></line>
           <line
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "crosshair" }}
             x1={x1}
             y1={y1}
             x2={x2}
@@ -357,17 +370,18 @@ export default class LineSegmentSliderInput extends Component<
             onMouseDown={e => {
               this.createCircles(e, x1, y1, x2, y2);
             }}
-          ></line>
+          />
           {circles &&
             circles.map((circle, index) => {
-              let radius = 4 / zoom;
+              let radius = 5 / zoom;
               if (index === this.props.index) {
-                radius = 5 / zoom;
+                radius = 7 / zoom;
               }
               return (
-                <>
+                <g key={`wrapper-${index}`}>
                   <circle
-                    key={index}
+                    key={`outer-circle-${index}`}
+                    style={{ cursor: "pointer" }}
                     cx={circle[0]}
                     cy={circle[1]}
                     r={radius}
@@ -386,9 +400,10 @@ export default class LineSegmentSliderInput extends Component<
                         }
                       );
                     }}
-                  ></circle>
+                  />
                   <circle
-                    key={index}
+                    style={{ cursor: "grab" }}
+                    key={`inner-circle-${index}`}
                     cx={circle[0]}
                     cy={circle[1]}
                     r={radius - 1}
@@ -404,8 +419,8 @@ export default class LineSegmentSliderInput extends Component<
                         }
                       );
                     }}
-                  ></circle>
-                </>
+                  />
+                </g>
               );
             })}
         </svg>
