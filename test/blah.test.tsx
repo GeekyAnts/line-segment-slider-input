@@ -1,10 +1,10 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import LineSegmentSliderInput from '../src/index';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import LineSegmentSliderInput from "../src/index";
 
-describe('it', () => {
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
+describe("it", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
     ReactDOM.render(
       <LineSegmentSliderInput
         width={500}
@@ -14,18 +14,34 @@ describe('it', () => {
         stops={[
           {
             position: 0,
-            color: 'white',
+            color: "white",
           },
           {
             position: 0.2,
-            color: 'white',
+            color: "white",
           },
           {
             position: 1,
-            color: 'white',
+            color: "white",
           },
         ]}
         index={-1}
+        zoom={1}
+        scroll={{ x: 0, y: 0 }}
+        // @ts-ignore
+        changeIndex={(index: number) => null}
+        handleMove={(
+          // @ts-ignore
+          type: string,
+          // @ts-ignore
+          handle:
+            | Array<number>
+            | Array<{
+                position: number;
+                color: string;
+              }>
+        ) => null}
+        removeHandle={() => null}
       />,
       div
     );
