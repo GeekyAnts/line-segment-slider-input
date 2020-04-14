@@ -60,25 +60,25 @@ export default class LineSegmentSliderInput extends Component<
     });
   }
 
-  calculateToolData(
+  calculateToolData = (
     stops: Array<Stop>,
     x1: number,
     y1: number,
     x2: number,
     y2: number
-  ) {
+  ) => {
     let circles = this.getCircleCoordinates(stops, x1, y1, x2, y2);
 
     return circles;
-  }
+  };
 
-  getCircleCoordinates(
+  getCircleCoordinates = (
     stops: Array<Stop>,
     x1: number,
     y1: number,
     x2: number,
     y2: number
-  ) {
+  ) => {
     let circles = [];
     for (let i = 0; i < stops.length; i++) {
       let m = stops[i].position;
@@ -92,38 +92,38 @@ export default class LineSegmentSliderInput extends Component<
     }
 
     return circles;
-  }
+  };
 
-  setXInBounds(x: number) {
+  setXInBounds = (x: number) => {
     return x / this.props.width;
-  }
+  };
 
-  setYInBounds(y: number) {
+  setYInBounds = (y: number) => {
     return y / this.props.height;
-  }
+  };
 
-  stopDrag() {
+  stopDrag = () => {
     this.setState({
       dragging: false,
     });
-  }
+  };
 
-  getCoefficients(x1: number, y1: number, x2: number, y2: number) {
+  getCoefficients = (x1: number, y1: number, x2: number, y2: number) => {
     return {
       a: y2 - y1,
       b: x1 - x2,
       c: x2 * y1 - x1 * y2,
     };
-  }
+  };
 
-  getClosestPointToLine(
+  getClosestPointToLine = (
     x: number,
     y: number,
     x1: number,
     y1: number,
     x2: number,
     y2: number
-  ) {
+  ) => {
     let { a, b, c } = this.getCoefficients(x1, y1, x2, y2);
 
     //WARNING: (a * a + b * b) shouldn't be zero
@@ -152,22 +152,27 @@ export default class LineSegmentSliderInput extends Component<
     }
 
     return [cX, cY];
-  }
+  };
 
-  getDistanceBetweenPoints(x1: number, y1: number, x2: number, y2: number) {
+  getDistanceBetweenPoints = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) => {
     let a = x1 - x2;
     let b = y1 - y2;
 
     return Math.sqrt(a * a + b * b);
-  }
+  };
 
-  getClosestPointToLineInFraction(
+  getClosestPointToLineInFraction = (
     coordinates: Array<number>,
     x1: number,
     y1: number,
     x2: number,
     y2: number
-  ) {
+  ) => {
     let totalLength = this.getDistanceBetweenPoints(x1, y1, x2, y2);
 
     let lengthOfClosestPoint = this.getDistanceBetweenPoints(
@@ -178,9 +183,9 @@ export default class LineSegmentSliderInput extends Component<
     );
 
     return lengthOfClosestPoint / totalLength;
-  }
+  };
 
-  getPointWithScrollZoom(point: number, type: "x" | "y") {
+  getPointWithScrollZoom = (point: number, type: "x" | "y") => {
     const { zoom, scroll } = this.props;
     const newPoint = point / zoom;
     if (type === "x") {
@@ -188,16 +193,16 @@ export default class LineSegmentSliderInput extends Component<
     } else {
       return newPoint + scroll.y;
     }
-  }
+  };
 
-  onMove(
+  onMove = (
     e: any,
     circles: Array<Array<number>>,
     x1: number,
     y1: number,
     x2: number,
     y2: number
-  ) {
+  ) => {
     if (this.props.index === 0) {
       this.props.handleMove("from", [
         this.setXInBounds(
@@ -239,9 +244,9 @@ export default class LineSegmentSliderInput extends Component<
       };
       this.props.handleMove("other", stops);
     }
-  }
+  };
 
-  createCircles(e: any, x1: number, y1: number, x2: number, y2: number) {
+  createCircles = (e: any, x1: number, y1: number, x2: number, y2: number) => {
     let closestPointsOnLine = this.getClosestPointToLine(
       this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
       this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
@@ -274,7 +279,7 @@ export default class LineSegmentSliderInput extends Component<
       this.props.changeIndex(index);
       this.props.handleMove("other", stops);
     });
-  }
+  };
 
   render() {
     let x1 = this.props.from[0] * this.props.width;
