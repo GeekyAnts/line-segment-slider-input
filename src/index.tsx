@@ -206,25 +206,31 @@ export default class LineSegmentSliderInput extends Component<
     if (this.props.index === 0) {
       this.props.handleMove("from", [
         this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
+          this.getPointWithScrollZoom(e.pageX, "x") -
+            this.state.x / this.props.zoom
         ),
         this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
+          this.getPointWithScrollZoom(e.pageY, "y") -
+            this.state.y / this.props.zoom
         ),
       ]);
     } else if (this.props.index === circles.length - 1) {
       this.props.handleMove("to", [
         this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
+          this.getPointWithScrollZoom(e.pageX, "x") -
+            this.state.x / this.props.zoom
         ),
         this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
+          this.getPointWithScrollZoom(e.pageY, "y") -
+            this.state.y / this.props.zoom
         ),
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
-        this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
+        this.getPointWithScrollZoom(e.pageX, "x") -
+          this.state.x / this.props.zoom,
+        this.getPointWithScrollZoom(e.pageY, "y") -
+          this.state.y / this.props.zoom,
         x1,
         y1,
         x2,
