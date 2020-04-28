@@ -189,9 +189,9 @@ export default class LineSegmentSliderInput extends Component<
     const { zoom, scroll } = this.props;
     const newPoint = point / zoom;
     if (type === "x") {
-      return newPoint + scroll.x;
+      return newPoint + scroll.x / zoom;
     } else {
-      return newPoint + scroll.y;
+      return newPoint + scroll.y / zoom;
     }
   };
 
