@@ -55,8 +55,8 @@ export default class LineSegmentSliderInput extends Component<
   componentDidMount() {
     let self = this.selector.current.getBoundingClientRect();
     this.setState({
-      x: self.x,
-      y: self.y,
+      x: self.x / this.props.zoom,
+      y: self.y / this.props.zoom,
     });
   }
 
@@ -206,31 +206,25 @@ export default class LineSegmentSliderInput extends Component<
     if (this.props.index === 0) {
       this.props.handleMove("from", [
         this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") -
-            this.state.x / this.props.zoom
+          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
         ),
         this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") -
-            this.state.y / this.props.zoom
+          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
         ),
       ]);
     } else if (this.props.index === circles.length - 1) {
       this.props.handleMove("to", [
         this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") -
-            this.state.x / this.props.zoom
+          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
         ),
         this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") -
-            this.state.y / this.props.zoom
+          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
         ),
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        this.getPointWithScrollZoom(e.pageX, "x") -
-          this.state.x / this.props.zoom,
-        this.getPointWithScrollZoom(e.pageY, "y") -
-          this.state.y / this.props.zoom,
+        this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
+        this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
         x1,
         y1,
         x2,
