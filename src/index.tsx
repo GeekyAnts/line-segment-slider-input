@@ -16,6 +16,7 @@ type PropType = {
   index: number;
   zoom: number;
   scroll: { x: number; y: number };
+  rotation?: number;
   changeIndex: (index: number) => void;
   handleMove: (type: string, handle: Array<number> | Array<Stop>) => void;
   removeHandle: () => void;
@@ -30,46 +31,43 @@ type PropType = {
   onWrapperMouseMove?: (e: any) => void;
 };
 
-type StateType = {
-  dragging: boolean;
-  x: number;
-  y: number;
-};
+function rotatePoint(point: any, angle: number, centroid: any) {
+  angle = (angle * Math.PI) / 180.0;
+  let newX =
+    (point[0] - centroid[0]) * Math.cos(angle) -
+    (point[1] - centroid[1]) * Math.sin(angle) +
+    centroid[0];
+  let newY =
+    (point[1] - centroid[1]) * Math.cos(angle) +
+    (point[0] - centroid[0]) * Math.sin(angle) +
+    centroid[1];
+  return [newX, newY];
+}
 
 export default class LineSegmentSliderInput extends Component<
   PropType,
-  StateType
+  { dragging: boolean }
 > {
   selector: any;
   constructor(props: PropType) {
     super(props);
     this.state = {
       dragging: false,
-      x: 0,
-      y: 0,
     };
-
-    this.selector = React.createRef();
   }
-
-  componentDidMount() {
-    let self = this.selector.current.getBoundingClientRect();
-    this.setState({
-      x: self.x / this.props.zoom,
-      y: self.y / this.props.zoom,
-    });
-  }
-
-  calculateToolData = (
-    stops: Array<Stop>,
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-  ) => {
-    let circles = this.getCircleCoordinates(stops, x1, y1, x2, y2);
-
-    return circles;
+  getRotatedPoint = (e: any) => {
+    const rotated = rotatePoint(
+      [
+        this.getPointWithScrollZoom(e.pageX, "x"),
+        this.getPointWithScrollZoom(e.pageY, "y"),
+      ],
+      this.props.rotation ? -this.props.rotation : 0,
+      [
+        this.props.x + this.props.width / 2,
+        this.props.y + this.props.height / 2,
+      ]
+    );
+    return [rotated[0] - this.props.x, rotated[1] - this.props.y];
   };
 
   getCircleCoordinates = (
@@ -203,28 +201,22 @@ export default class LineSegmentSliderInput extends Component<
     x2: number,
     y2: number
   ) => {
+    const rotatedPoint = this.getRotatedPoint(e);
     if (this.props.index === 0) {
-      this.props.handleMove("from", [
-        this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
-        ),
-        this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
-        ),
-      ]);
+      const point = [
+        this.setXInBounds(rotatedPoint[0]),
+        this.setYInBounds(rotatedPoint[1]),
+      ];
+      this.props.handleMove("from", point);
     } else if (this.props.index === circles.length - 1) {
       this.props.handleMove("to", [
-        this.setXInBounds(
-          this.getPointWithScrollZoom(e.pageX, "x") - this.state.x
-        ),
-        this.setYInBounds(
-          this.getPointWithScrollZoom(e.pageY, "y") - this.state.y
-        ),
+        this.setXInBounds(rotatedPoint[0]),
+        this.setYInBounds(rotatedPoint[1]),
       ]);
     } else {
       let closestPointsOnLine = this.getClosestPointToLine(
-        this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
-        this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
+        rotatedPoint[0],
+        rotatedPoint[1],
         x1,
         y1,
         x2,
@@ -247,9 +239,10 @@ export default class LineSegmentSliderInput extends Component<
   };
 
   createCircles = (e: any, x1: number, y1: number, x2: number, y2: number) => {
+    const rotatedPoint = this.getRotatedPoint(e);
     let closestPointsOnLine = this.getClosestPointToLine(
-      this.getPointWithScrollZoom(e.pageX, "x") - this.state.x,
-      this.getPointWithScrollZoom(e.pageY, "y") - this.state.y,
+      rotatedPoint[0],
+      rotatedPoint[1],
       x1,
       y1,
       x2,
@@ -287,7 +280,7 @@ export default class LineSegmentSliderInput extends Component<
     let x2 = this.props.to[0] * this.props.width;
     let y2 = this.props.to[1] * this.props.height;
     const { zoom } = this.props;
-    let circles = this.calculateToolData(this.props.stops, x1, y1, x2, y2);
+    let circles = this.getCircleCoordinates(this.props.stops, x1, y1, x2, y2);
     return (
       <div
         style={{
@@ -329,10 +322,12 @@ export default class LineSegmentSliderInput extends Component<
       >
         <svg
           tabIndex={0}
-          ref={this.selector}
           height={this.props.height}
           width={this.props.width}
           style={{
+            transform: this.props.rotation
+              ? `rotate(${this.props.rotation}deg)`
+              : undefined,
             position: "absolute",
             backgroundColor: "transparent",
             top: this.props.y,

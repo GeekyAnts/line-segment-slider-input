@@ -14,13 +14,14 @@ type StateType = {
   stops: Array<Stop>;
   index: number;
 };
+
 class App extends React.Component<{}, StateType> {
   constructor(props) {
     super(props);
 
     this.state = {
-      from: [0.0, 0.0],
-      to: [1, 1],
+      from: [0.5, 0],
+      to: [0.5, 1],
       index: -1,
       stops: [
         {
@@ -77,11 +78,12 @@ class App extends React.Component<{}, StateType> {
         }}
       >
         <LineSegmentSliderInput
-          x={20}
-          y={20}
-          width={500}
-          height={500}
+          x={200}
+          y={200}
+          width={200}
+          height={200}
           zoom={1}
+          // rotation={45}
           scroll={{ x: 0, y: 0 }}
           from={this.state.from}
           to={this.state.to}
@@ -91,13 +93,13 @@ class App extends React.Component<{}, StateType> {
           handleMove={this.handleMove.bind(this)}
           removeHandle={this.removeHandle.bind(this)}
           onClickOutside={(e: any) => {
-            console.log("clicked outside", e);
+            // console.log("clicked outside", e);
           }}
           onWrapperMouseDown={(e: any) => {
-            console.log("mouse down", e);
+            // console.log("mouse down", e);
           }}
           onWrapperMouseUp={(e: any) => {
-            console.log("mouse up", e);
+            // console.log("mouse up", e);
           }}
         />
       </div>
