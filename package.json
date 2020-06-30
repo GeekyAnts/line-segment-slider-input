@@ -1,6 +1,6 @@
 {
     "name": "line-segment-slider-input",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "main": "dist/index.js",
     "module": "dist/line-segment-slider-input.esm.js",
     "typings": "dist/index.d.ts",
