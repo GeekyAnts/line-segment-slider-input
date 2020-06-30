@@ -92,6 +92,10 @@ class App extends React.Component<{}, StateType> {
           changeIndex={this.changeIndex.bind(this)}
           handleMove={this.handleMove.bind(this)}
           removeHandle={this.removeHandle.bind(this)}
+          onDragStart={() => {
+            // console.log("*** 🔥 herer");
+          }}
+          onDragEnd={() => {}}
           onClickOutside={(e: any) => {
             // console.log("clicked outside", e);
           }}

@@ -20,6 +20,8 @@ type PropType = {
   changeIndex: (index: number) => void;
   handleMove: (type: string, handle: Array<number> | Array<Stop>) => void;
   removeHandle: () => void;
+  onDragStart: () => void;
+  onDragEnd: () => void;
   onClickOutside?: (e: any) => void;
   onWrapperMouseDown?: (e: any) => void;
   onWrapperMouseUp?: (e: any) => void;
@@ -101,6 +103,7 @@ export default class LineSegmentSliderInput extends Component<
   };
 
   stopDrag = () => {
+    this.props.onDragEnd();
     this.setState({
       dragging: false,
     });
@@ -270,6 +273,7 @@ export default class LineSegmentSliderInput extends Component<
     });
     this.setState({ dragging: true }, () => {
       this.props.changeIndex(index);
+      this.props.onDragStart();
       this.props.handleMove("other", stops);
     });
   };
@@ -440,6 +444,7 @@ export default class LineSegmentSliderInput extends Component<
                           dragging: true,
                         },
                         () => {
+                          this.props.onDragStart();
                           this.props.changeIndex(index);
                         }
                       );
@@ -459,6 +464,7 @@ export default class LineSegmentSliderInput extends Component<
                           dragging: true,
                         },
                         () => {
+                          this.props.onDragStart();
                           this.props.changeIndex(index);
                         }
                       );
