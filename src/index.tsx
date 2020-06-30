@@ -48,30 +48,65 @@ function rotatePoint(point: any, angle: number, centroid: any) {
 
 export default class LineSegmentSliderInput extends Component<
   PropType,
-  { dragging: boolean }
+  { dragging: boolean; x: number; y: number; parentX: number; parentY: number }
 > {
   selector: any;
   constructor(props: PropType) {
     super(props);
     this.state = {
       dragging: false,
+      x: 0,
+      y: 0,
+      parentX: 0,
+      parentY: 0,
     };
   }
+  componentDidMount() {
+    if (this.selector) {
+      let self = this.selector.getBoundingClientRect();
+      let parentPos = this.selector.parentNode
+        ? this.selector.parentNode.getBoundingClientRect()
+        : { x: 0, y: 0 };
+      this.setState({
+        x: self.x / this.props.zoom,
+        y: self.y / this.props.zoom,
+        parentX: parentPos.x / this.props.zoom,
+        parentY: parentPos.y / this.props.zoom,
+      });
+    }
+  }
+  // getRotatedPoint = (e: any) => {
+  //   const rotated = rotatePoint(
+  //     [
+  //       this.getPointWithScrollZoom(e.pageX, "x"),
+  //       this.getPointWithScrollZoom(e.pageY, "y"),
+  //     ],
+  //     this.props.rotation ? -this.props.rotation : 0,
+  //     [
+  //       this.state.x + this.props.width / 2,
+  //       this.state.y + this.props.height / 2,
+  //     ]
+  //   );
+  //   return [rotated[0] - this.state.x, rotated[1] - this.state.y];
+  // };
   getRotatedPoint = (e: any) => {
-    const rotated = rotatePoint(
+    let rotatedPos = rotatePoint(
+      [this.state.parentX + this.props.x, this.state.parentY + this.props.y],
+      this.props.rotation ? this.props.rotation : 0,
       [
-        this.getPointWithScrollZoom(e.pageX, "x"),
-        this.getPointWithScrollZoom(e.pageY, "y"),
-      ],
-      this.props.rotation ? -this.props.rotation : 0,
-      [
-        this.props.x + this.props.width / 2,
-        this.props.y + this.props.height / 2,
+        this.state.parentX + this.props.x + this.props.width / 2,
+        this.state.parentY + this.props.y + this.props.height / 2,
       ]
     );
-    return [rotated[0] - this.props.x, rotated[1] - this.props.y];
+    let x = this.getPointWithScrollZoom(e.pageX, "x") - rotatedPos[0];
+    let y = this.getPointWithScrollZoom(e.pageY, "y") - rotatedPos[1];
+    let rotatedNew = rotatePoint(
+      [x, y],
+      this.props.rotation ? -this.props.rotation : 0,
+      [0, 0]
+    );
+    return rotatedNew;
   };
-
   getCircleCoordinates = (
     stops: Array<Stop>,
     x1: number,
@@ -187,13 +222,7 @@ export default class LineSegmentSliderInput extends Component<
   };
 
   getPointWithScrollZoom = (point: number, type: "x" | "y") => {
-    const { zoom, scroll } = this.props;
-    const newPoint = point / zoom;
-    if (type === "x") {
-      return newPoint + scroll.x / zoom;
-    } else {
-      return newPoint + scroll.y / zoom;
-    }
+    return (point + this.props.scroll[type]) / this.props.zoom;
   };
 
   onMove = (
@@ -328,12 +357,12 @@ export default class LineSegmentSliderInput extends Component<
           tabIndex={0}
           height={this.props.height}
           width={this.props.width}
+          ref={x => (this.selector = x)}
           style={{
             transform: this.props.rotation
               ? `rotate(${this.props.rotation}deg)`
               : undefined,
             position: "absolute",
-            backgroundColor: "transparent",
             top: this.props.y,
             left: this.props.x,
             outline: "none",

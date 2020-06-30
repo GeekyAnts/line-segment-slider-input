@@ -20,8 +20,8 @@ class App extends React.Component<{}, StateType> {
     super(props);
 
     this.state = {
-      from: [0.5, 0],
-      to: [0.5, 1],
+      from: [0, 0],
+      to: [1, 1],
       index: -1,
       stops: [
         {
@@ -70,8 +70,8 @@ class App extends React.Component<{}, StateType> {
     return (
       <div
         style={{
-          top: 0,
-          left: 0,
+          top: 100,
+          left: 100,
           right: 0,
           bottom: 0,
           position: "absolute",
@@ -83,7 +83,7 @@ class App extends React.Component<{}, StateType> {
           width={200}
           height={200}
           zoom={1}
-          // rotation={45}
+          // rotation={90}
           scroll={{ x: 0, y: 0 }}
           from={this.state.from}
           to={this.state.to}
